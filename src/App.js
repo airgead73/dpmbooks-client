@@ -1,11 +1,34 @@
-import './App.css';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import { useAuth0 } from '@auth0/auth0-react';
 
-function App() {
+import { NavBar, Footer, Loading } from "./components";
+import { Home, Profile, ExternalApi } from "./views";
+import ProtectedRoutes from './auth/protected-route';
+
+import "./app.css";
+
+const App = () => {
+  const { isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <Loading />;
+  }  
   return (
-    <div className="App">
-      <h1>dpmbooks</h1>
+    <div id="app" className="d-flex flex-column h-100">
+      <NavBar />
+      <div className="container flex-grow-1">
+        <Routes>
+          <Route path="/" element={<Home/>} />
+          <Route element={<ProtectedRoutes/>}>
+            <Route path="/profile" element={<Profile/>} />
+            <Route path="/external-api" element={<ExternalApi/>} />
+          </Route>
+        </Routes>
+      </div>
+      <Footer />
     </div>
   );
-}
+};
 
 export default App;
